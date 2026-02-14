@@ -57,14 +57,34 @@ A detailed setup guide for Windows, macOS, and Linux with a video can be found i
 
 ### ⚡ Quick Start
 
+**Docker Mode:**
 ```bash
 # Pull and run with Docker
-
 docker pull agent0ai/agent-zero
 docker run -p 50001:80 agent0ai/agent-zero
 
 # Visit http://localhost:50001 to start
 ```
+
+**Local Mode (No Docker Required):**
+```bash
+# Clone and install
+git clone https://github.com/SKLGZ/agent-zero.git
+cd agent-zero
+pip install -r requirements.txt
+
+# Configure workspace in .env
+echo "A0_SET_workspace_restrict_enabled=true" >> .env
+echo "A0_SET_workspace_root_path=$(pwd)/usr" >> .env
+echo "A0_SET_shell_interface=local" >> .env
+
+# Run locally
+python run_ui.py
+
+# Visit http://localhost:50001 to start
+```
+
+**[Learn more about Local Workspace Mode →](./docs/guides/local-workspace.md)**
 
 
 # 💡 Key Features
@@ -155,6 +175,7 @@ docker run -p 50001:80 agent0ai/agent-zero
 |-------|-------------|
 | [Installation](./docs/setup/installation.md) | Installation, setup and configuration |
 | [Usage](./docs/guides/usage.md) | Basic and advanced usage |
+| [Local Workspace Mode](./docs/guides/local-workspace.md) | Run without Docker with workspace sandboxing |
 | [Guides](./docs/guides/) | Step-by-step guides: Usage, Projects, API Integration, MCP Setup, A2A Setup |
 | [Development Setup](./docs/setup/dev-setup.md) | Development and customization |
 | [WebSocket Infrastructure](./docs/developer/websockets.md) | Real-time WebSocket handlers, client APIs, filtering semantics, envelopes |

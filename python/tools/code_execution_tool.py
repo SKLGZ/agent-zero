@@ -485,6 +485,14 @@ class CodeExecution(Tool):
             return None
 
         normalized = files.normalize_a0_path(path)
+        
+        # Validate workspace boundary
+        is_valid, error_msg = files.validate_workspace_path(normalized)
+        if not is_valid:
+            from python.helpers.print_style import PrintStyle
+            PrintStyle.error(error_msg)
+            return None
+        
         await runtime.call_development_function(make_dir, normalized)
         return normalized
 
