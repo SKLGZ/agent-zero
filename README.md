@@ -66,6 +66,9 @@ docker run -p 50001:80 agent0ai/agent-zero
 # Visit http://localhost:50001 to start
 ```
 
+> [!NOTE]
+> **Default Model Configuration:** Agent Zero is pre-configured to work with [LM Studio](https://lmstudio.ai/) running locally at `http://127.0.0.1:1234` with the model `openai/gpt-oss-20b`. You can change this in the Settings UI after startup or by setting environment variables `A0_SET_chat_model_provider`, `A0_SET_chat_model_name`, and `A0_SET_chat_model_api_base` in your `.env` file.
+
 
 # 💡 Key Features
 

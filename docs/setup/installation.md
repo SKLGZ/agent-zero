@@ -249,6 +249,9 @@ Agent Zero provides a comprehensive settings interface to customize various aspe
 
 ### Chat Model Settings
 
+> [!NOTE]
+> **Default Configuration:** Agent Zero comes pre-configured to use **LM Studio** with the model `openai/gpt-oss-20b` at `http://127.0.0.1:1234`. If you have LM Studio running with this model loaded, you can skip this configuration. Otherwise, you can change the provider, model, and API URL below.
+
 - **Provider:** Select the chat model provider (e.g., Anthropic)
 - **Model Name:** Choose the specific model (e.g., claude-sonnet-4-5)
 - **Context Length:** Set the maximum token limit for context window

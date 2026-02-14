@@ -220,6 +220,10 @@ class SettingsOutput(TypedDict):
 PASSWORD_PLACEHOLDER = "****PSWD****"
 API_KEY_PLACEHOLDER = "************"
 
+# Default LM Studio configuration constants
+DEFAULT_LM_STUDIO_MODEL = "openai/gpt-oss-20b"
+DEFAULT_LM_STUDIO_API_BASE = "http://127.0.0.1:1234"
+
 SETTINGS_FILE = files.get_abs_path("usr/settings.json")
 _settings: Settings | None = None
 _runtime_settings_snapshot: Settings | None = None
@@ -513,9 +517,9 @@ def get_default_settings() -> Settings:
     gitignore = files.read_file(files.get_abs_path("conf/workdir.gitignore"))
     return Settings(
         version=_get_version(),
-        chat_model_provider=get_default_value("chat_model_provider", "openrouter"),
-        chat_model_name=get_default_value("chat_model_name", "google/gemini-3-pro-preview"),
-        chat_model_api_base=get_default_value("chat_model_api_base", ""),
+        chat_model_provider=get_default_value("chat_model_provider", "lm_studio"),
+        chat_model_name=get_default_value("chat_model_name", DEFAULT_LM_STUDIO_MODEL),
+        chat_model_api_base=get_default_value("chat_model_api_base", DEFAULT_LM_STUDIO_API_BASE),
         chat_model_kwargs=get_default_value("chat_model_kwargs", {"temperature": "0"}),
         chat_model_ctx_length=get_default_value("chat_model_ctx_length", 100000),
         chat_model_ctx_history=get_default_value("chat_model_ctx_history", 0.7),
@@ -523,9 +527,9 @@ def get_default_settings() -> Settings:
         chat_model_rl_requests=get_default_value("chat_model_rl_requests", 0),
         chat_model_rl_input=get_default_value("chat_model_rl_input", 0),
         chat_model_rl_output=get_default_value("chat_model_rl_output", 0),
-        util_model_provider=get_default_value("util_model_provider", "openrouter"),
-        util_model_name=get_default_value("util_model_name", "google/gemini-3-flash-preview"),
-        util_model_api_base=get_default_value("util_model_api_base", ""),
+        util_model_provider=get_default_value("util_model_provider", "lm_studio"),
+        util_model_name=get_default_value("util_model_name", DEFAULT_LM_STUDIO_MODEL),
+        util_model_api_base=get_default_value("util_model_api_base", DEFAULT_LM_STUDIO_API_BASE),
         util_model_ctx_length=get_default_value("util_model_ctx_length", 100000),
         util_model_ctx_input=get_default_value("util_model_ctx_input", 0.7),
         util_model_kwargs=get_default_value("util_model_kwargs", {"temperature": "0"}),
@@ -538,9 +542,9 @@ def get_default_settings() -> Settings:
         embed_model_kwargs=get_default_value("embed_model_kwargs", {}),
         embed_model_rl_requests=get_default_value("embed_model_rl_requests", 0),
         embed_model_rl_input=get_default_value("embed_model_rl_input", 0),
-        browser_model_provider=get_default_value("browser_model_provider", "openrouter"),
-        browser_model_name=get_default_value("browser_model_name", "google/gemini-3-pro-preview"),
-        browser_model_api_base=get_default_value("browser_model_api_base", ""),
+        browser_model_provider=get_default_value("browser_model_provider", "lm_studio"),
+        browser_model_name=get_default_value("browser_model_name", DEFAULT_LM_STUDIO_MODEL),
+        browser_model_api_base=get_default_value("browser_model_api_base", DEFAULT_LM_STUDIO_API_BASE),
         browser_model_vision=get_default_value("browser_model_vision", True),
         browser_model_rl_requests=get_default_value("browser_model_rl_requests", 0),
         browser_model_rl_input=get_default_value("browser_model_rl_input", 0),
