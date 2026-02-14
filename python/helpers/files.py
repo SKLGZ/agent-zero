@@ -206,6 +206,11 @@ def evaluate_text_conditions(_content: str, **kwargs):
 def read_file(relative_path: str, encoding="utf-8"):
     # Try to get the absolute path for the file from the original directory or backup directories
     absolute_path = get_abs_path(relative_path)
+    
+    # Validate workspace boundary
+    is_valid, error_msg = validate_workspace_path(absolute_path)
+    if not is_valid:
+        raise PermissionError(error_msg)
 
     # Read the file content
     with open(absolute_path, "r", encoding=encoding) as f:
@@ -215,6 +220,11 @@ def read_file(relative_path: str, encoding="utf-8"):
 def read_file_bin(relative_path: str):
     # Try to get the absolute path for the file from the original directory or backup directories
     absolute_path = get_abs_path(relative_path)
+    
+    # Validate workspace boundary
+    is_valid, error_msg = validate_workspace_path(absolute_path)
+    if not is_valid:
+        raise PermissionError(error_msg)
 
     # read binary content
     with open(absolute_path, "rb") as f:
@@ -224,6 +234,11 @@ def read_file_bin(relative_path: str):
 def read_file_base64(relative_path):
     # get absolute path
     absolute_path = get_abs_path(relative_path)
+    
+    # Validate workspace boundary
+    is_valid, error_msg = validate_workspace_path(absolute_path)
+    if not is_valid:
+        raise PermissionError(error_msg)
 
     # read binary content and encode to base64
     with open(absolute_path, "rb") as f:
@@ -402,6 +417,12 @@ def is_full_json_template(text):
 
 def write_file(relative_path: str, content: str, encoding: str = "utf-8"):
     abs_path = get_abs_path(relative_path)
+    
+    # Validate workspace boundary
+    is_valid, error_msg = validate_workspace_path(abs_path)
+    if not is_valid:
+        raise PermissionError(error_msg)
+    
     os.makedirs(os.path.dirname(abs_path), exist_ok=True)
     content = sanitize_string(content, encoding)
     with open(abs_path, "w", encoding=encoding) as f:
@@ -410,6 +431,12 @@ def write_file(relative_path: str, content: str, encoding: str = "utf-8"):
 
 def write_file_bin(relative_path: str, content: bytes):
     abs_path = get_abs_path(relative_path)
+    
+    # Validate workspace boundary
+    is_valid, error_msg = validate_workspace_path(abs_path)
+    if not is_valid:
+        raise PermissionError(error_msg)
+    
     os.makedirs(os.path.dirname(abs_path), exist_ok=True)
     with open(abs_path, "wb") as f:
         f.write(content)
@@ -419,6 +446,12 @@ def write_file_base64(relative_path: str, content: str):
     # decode base64 string to bytes
     data = base64.b64decode(content)
     abs_path = get_abs_path(relative_path)
+    
+    # Validate workspace boundary
+    is_valid, error_msg = validate_workspace_path(abs_path)
+    if not is_valid:
+        raise PermissionError(error_msg)
+    
     os.makedirs(os.path.dirname(abs_path), exist_ok=True)
     with open(abs_path, "wb") as f:
         f.write(data)
@@ -427,6 +460,12 @@ def write_file_base64(relative_path: str, content: str):
 def delete_dir(relative_path: str):
     # ensure deletion of directory without propagating errors
     abs_path = get_abs_path(relative_path)
+    
+    # Validate workspace boundary
+    is_valid, error_msg = validate_workspace_path(abs_path)
+    if not is_valid:
+        raise PermissionError(error_msg)
+    
     if os.path.exists(abs_path):
         # first try with ignore_errors=True which is the safest option
         shutil.rmtree(abs_path, ignore_errors=True)
@@ -454,6 +493,15 @@ def move_dir(old_path: str, new_path: str):
     # rename/move the directory from old_path to new_path (both relative)
     abs_old = get_abs_path(old_path)
     abs_new = get_abs_path(new_path)
+    
+    # Validate workspace boundary for both paths
+    is_valid_old, error_msg_old = validate_workspace_path(abs_old)
+    if not is_valid_old:
+        raise PermissionError(error_msg_old)
+    is_valid_new, error_msg_new = validate_workspace_path(abs_new)
+    if not is_valid_new:
+        raise PermissionError(error_msg_new)
+    
     if not os.path.isdir(abs_old):
         return  # nothing to rename
     
@@ -490,6 +538,12 @@ def create_dir_safe(dst, rename_format="{name}_{number}"):
 
 def create_dir(relative_path: str):
     abs_path = get_abs_path(relative_path)
+    
+    # Validate workspace boundary
+    is_valid, error_msg = validate_workspace_path(abs_path)
+    if not is_valid:
+        raise PermissionError(error_msg)
+    
     os.makedirs(abs_path, exist_ok=True)
 
 
@@ -576,6 +630,30 @@ def is_in_dir(path:str,dir:str):
     abs_path = os.path.abspath(path)
     abs_dir = os.path.abspath(dir)
     return os.path.commonpath([abs_path, abs_dir]) == abs_dir
+
+
+def validate_workspace_path(path: str) -> tuple[bool, str]:
+    """
+    Validate if a path is within the workspace boundary.
+    Returns (is_valid, error_message)
+    """
+    from python.helpers import settings
+    
+    set = settings.get_settings()
+    if not set.get("workspace_restrict_enabled", False):
+        return True, ""
+    
+    workspace_root = set.get("workspace_root_path", "")
+    if not workspace_root:
+        return True, ""
+    
+    abs_path = os.path.abspath(path)
+    abs_workspace = os.path.abspath(workspace_root)
+    
+    if not is_in_dir(abs_path, abs_workspace):
+        return False, f"Access denied: Path '{path}' is outside the workspace boundary '{workspace_root}'"
+    
+    return True, ""
 
 
 def get_subdirectories(

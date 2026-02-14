@@ -102,6 +102,8 @@ class Settings(TypedDict):
     workdir_max_folders: int
     workdir_max_lines: int
     workdir_gitignore: str
+    workspace_restrict_enabled: bool
+    workspace_root_path: str
 
     memory_recall_enabled: bool
     memory_recall_delayed: bool
@@ -575,12 +577,14 @@ def get_default_settings() -> Settings:
         workdir_max_folders=get_default_value("workdir_max_folders", 20),
         workdir_max_lines=get_default_value("workdir_max_lines", 250),
         workdir_gitignore=get_default_value("workdir_gitignore", gitignore),
+        workspace_restrict_enabled=get_default_value("workspace_restrict_enabled", not runtime.is_dockerized()),
+        workspace_root_path=get_default_value("workspace_root_path", files.get_abs_path_dockerized("usr")),
         rfc_auto_docker=get_default_value("rfc_auto_docker", True),
         rfc_url=get_default_value("rfc_url", "localhost"),
         rfc_password="",
         rfc_port_http=get_default_value("rfc_port_http", 55080),
         rfc_port_ssh=get_default_value("rfc_port_ssh", 55022),
-        shell_interface=get_default_value("shell_interface", "local" if runtime.is_dockerized() else "ssh"),
+        shell_interface=get_default_value("shell_interface", "ssh" if runtime.is_dockerized() else "local"),
         websocket_server_restart_enabled=get_default_value("websocket_server_restart_enabled", True),
         uvicorn_access_logs_enabled=get_default_value("uvicorn_access_logs_enabled", False),
         stt_model_size=get_default_value("stt_model_size", "base"),
