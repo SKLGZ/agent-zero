@@ -577,6 +577,9 @@ def get_default_settings() -> Settings:
         workdir_max_folders=get_default_value("workdir_max_folders", 20),
         workdir_max_lines=get_default_value("workdir_max_lines", 250),
         workdir_gitignore=get_default_value("workdir_gitignore", gitignore),
+        # Workspace restriction is enabled by default for non-Docker mode to provide
+        # security sandbox when running locally. Docker provides container isolation.
+        # Users can override this setting via A0_SET_workspace_restrict_enabled.
         workspace_restrict_enabled=get_default_value("workspace_restrict_enabled", not runtime.is_dockerized()),
         workspace_root_path=get_default_value("workspace_root_path", files.get_abs_path_dockerized("usr")),
         rfc_auto_docker=get_default_value("rfc_auto_docker", True),
@@ -584,7 +587,11 @@ def get_default_settings() -> Settings:
         rfc_password="",
         rfc_port_http=get_default_value("rfc_port_http", 55080),
         rfc_port_ssh=get_default_value("rfc_port_ssh", 55022),
-        shell_interface=get_default_value("shell_interface", "local"),  # Default to local shell for both Docker and non-Docker mode
+        # Default to local shell for both Docker and non-Docker modes.
+        # This simplifies the setup and works well for most use cases.
+        # Docker users can still override to "ssh" if needed via A0_SET_shell_interface.
+        # Note: This is a behavioral change from the previous default of "ssh" for non-Docker.
+        shell_interface=get_default_value("shell_interface", "local"),
         websocket_server_restart_enabled=get_default_value("websocket_server_restart_enabled", True),
         uvicorn_access_logs_enabled=get_default_value("uvicorn_access_logs_enabled", False),
         stt_model_size=get_default_value("stt_model_size", "base"),

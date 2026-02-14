@@ -1,5 +1,17 @@
 #!/usr/bin/env python3
-"""Verify workspace restriction feature is correctly implemented."""
+"""Verify workspace restriction feature is correctly implemented.
+
+Note: This verification script uses a combination of AST parsing and regex
+pattern matching. AST parsing is more reliable but can fail on malformed code,
+while regex patterns are simpler but may have edge cases. The script is designed
+to verify the presence of key functions and validation logic, not to perform
+deep static analysis.
+
+Limitations:
+- Function boundary detection via regex may fail on unusual formatting
+- AST parsing requires valid Python syntax
+- Does not verify runtime behavior, only code structure
+"""
 import os
 import ast
 import sys

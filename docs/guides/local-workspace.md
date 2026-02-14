@@ -2,6 +2,8 @@
 
 Agent Zero can run in local workspace mode without Docker, allowing you to specify a desktop folder as your project workspace while ensuring the agent operates securely within that boundary.
 
+> **⚠️ Breaking Change Notice**: Starting with this version, the default `shell_interface` is set to `"local"` for all modes (Docker and non-Docker). Previously, non-Docker mode defaulted to `"ssh"`. If you rely on SSH mode in non-Docker environments, set `A0_SET_shell_interface=ssh` in your `.env` file.
+
 ## Overview
 
 Local workspace mode provides:
