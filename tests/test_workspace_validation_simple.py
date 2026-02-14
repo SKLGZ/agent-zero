@@ -1,4 +1,9 @@
-"""Simple test to verify workspace path validation logic."""
+"""Simple test to verify workspace path validation logic.
+
+Note: This test duplicates the validation logic from python/helpers/files.py
+instead of importing it to avoid circular dependencies and to test the logic
+independently without requiring all of Agent Zero's dependencies.
+"""
 import os
 import sys
 import tempfile
@@ -10,6 +15,8 @@ sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')
 def test_workspace_validation():
     """Test workspace path validation without full module dependencies."""
     
+    # Duplicate validation logic for independent testing
+    # This allows testing without importing the full Agent Zero module tree
     def is_in_dir(path: str, dir: str):
         """Check if the given path is within the directory."""
         abs_path = os.path.abspath(path)

@@ -584,7 +584,7 @@ def get_default_settings() -> Settings:
         rfc_password="",
         rfc_port_http=get_default_value("rfc_port_http", 55080),
         rfc_port_ssh=get_default_value("rfc_port_ssh", 55022),
-        shell_interface=get_default_value("shell_interface", "ssh" if runtime.is_dockerized() else "local"),
+        shell_interface=get_default_value("shell_interface", "local"),  # Default to local shell for both Docker and non-Docker mode
         websocket_server_restart_enabled=get_default_value("websocket_server_restart_enabled", True),
         uvicorn_access_logs_enabled=get_default_value("uvicorn_access_logs_enabled", False),
         stt_model_size=get_default_value("stt_model_size", "base"),

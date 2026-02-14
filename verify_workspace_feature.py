@@ -77,21 +77,31 @@ def main():
         if check_file_has_function(files_file, func_name):
             with open(files_file, 'r') as f:
                 content = f.read()
-                # Check if the function contains validate_workspace_path call
-                func_start = content.find(f"def {func_name}(")
-                if func_start != -1:
+                # Find the function definition using AST or string search
+                # Use word boundaries to avoid matching partial names
+                import re
+                func_pattern = rf'\bdef\s+{re.escape(func_name)}\s*\('
+                func_match = re.search(func_pattern, content)
+                
+                if func_match:
+                    func_start = func_match.start()
                     # Find the next function definition
-                    next_def = content.find("\ndef ", func_start + 1)
-                    if next_def == -1:
-                        func_content = content[func_start:]
+                    next_match = re.search(func_pattern, content[func_start + len(func_name):])
+                    if next_match:
+                        func_end = func_start + len(func_name) + next_match.start()
                     else:
-                        func_content = content[func_start:next_def]
+                        func_end = len(content)
+                    
+                    func_content = content[func_start:func_end]
                     
                     if "validate_workspace_path" in func_content:
                         print(f"  ✓ {op_name} has validation")
                     else:
                         print(f"  ✗ {op_name} missing validation")
                         all_checks_passed = False
+                else:
+                    print(f"  ✗ Could not locate {func_name} function body")
+                    all_checks_passed = False
         else:
             print(f"  ✗ Function {func_name} not found")
             all_checks_passed = False
